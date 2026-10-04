@@ -1,0 +1,63 @@
+/* Photos: full-bleed like live (`--site-content-max-width: none`) and CSS-column masonry. */
+.site-content.photos {
+  --site-content-max-width: none;
+  padding: 0;
+  background: #fff;
+}
+.photos-content .gallery.masonry-gallery {
+  column-count: 3;
+  column-gap: 10px;
+}
+.photos-content .gallery.masonry-gallery.columns-5 {
+  column-count: 5;
+}
+.photos-content .gallery-item {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100% !important;
+  margin: 0 0 10px;
+  break-inside: avoid;
+}
+.photos-content .gallery-item.is-filtered-out {
+  display: none;
+}
+.hljs-ln { border-collapse: collapse; }
+.hljs-ln td { padding: 0; }
+.hljs-ln-n:before { content: attr(data-line-number); }
+.entry-content img,
+.entry-content video {
+  max-width: 100%;
+  height: auto;
+}
+.search-form .m-search-input {
+  width: min(100%, 28rem);
+  margin: 1.5rem 0;
+}
+
+/* Footer credit keeps spaces even when HTML whitespace is minified away. */
+.footer-copyright p .iconify {
+  margin-inline: 0.2em;
+}
+
+/* Orange active marker for the article TOC (Sakura `.is-active-link`). */
+.toc a.toc-link.is-active-link {
+  font-weight: 700;
+  color: var(--theme-color);
+}
+.toc a.toc-link.is-active-link::before {
+  background-color: var(--theme-color) !important;
+  width: 2px;
+  height: 1.2em;
+}
+
+/* Hero chevron stays visible if Iconify has not swapped in the icon yet. */
+.headertop-down .iconify svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+.site-content.archives {
+  background: #fff;
+}
