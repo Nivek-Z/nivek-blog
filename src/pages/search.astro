@@ -1,0 +1,31 @@
+---
+import Base from "../layouts/Base.astro";
+import { posts } from "../lib/content";
+const index = posts.map((p) => ({ title: p.title, permalink: p.permalink, excerpt: p.excerpt, date: p.publishLabel }));
+---
+<Base title="搜索" template="page" contentClass="search">
+  <div slot="banner" class="page-header">
+    <div class="pattern-title"><h1>搜索</h1></div>
+  </div>
+  <div id="primary" class="content-area">
+    <form class="search-form" id="site-search" action="/search" method="get" role="search">
+      <input class="m-search-input" type="search" name="keyword" placeholder="搜索..." />
+    </form>
+    <div id="search-results" class="site-main"></div>
+  </div>
+  <script id="search-index" type="application/json" set:html={JSON.stringify(index)}></script>
+  <script is:inline>
+    const data = JSON.parse(document.getElementById("search-index").textContent || "[]");
+    const box = document.getElementById("search-results");
+    const input = document.querySelector("#site-search input");
+    const params = new URLSearchParams(location.search);
+    if (params.get("keyword")) input.value = params.get("keyword");
+    function render() {
+      const q = (input.value || "").trim().toLowerCase();
+      const hits = q ? data.filter((p) => (p.title + p.excerpt).toLowerCase().includes(q)) : data;
+      box.innerHTML = hits.map((p) => `<article class="post post-list-thumb"><div class="post-content-wrap"><a class="post-title" href="${p.permalink}"><h1>${p.title}</h1></a><div class="float-content"><p>${p.excerpt || ""}</p></div></div></article>`).join("") || "<p>没有找到任何东西！</p>";
+    }
+    input.addEventListener("input", render);
+    render();
+  </script>
+</Base>

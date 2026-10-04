@@ -1,0 +1,24 @@
+---
+import Base from "../layouts/Base.astro";
+import PostList from "../components/PostList.astro";
+import { assets, pageCount, posts, slicePage, SITE_SUBTITLE, SITE_TITLE } from "../lib/content";
+const page = 1;
+const pages = pageCount();
+const items = slicePage(posts, page);
+---
+<Base title={`${SITE_TITLE} - ${SITE_SUBTITLE}`} template="index" contentClass="index" description={SITE_SUBTITLE}>
+  <div slot="banner" class="headertop">
+    <figure id="centerbg" class="centerbg">
+      <img class="cover-bg" src={assets.hero} alt="background picture of the home page" width="1920" height="1080" />
+      <div class="focusinfo"></div>
+    </figure>
+    <div class="headertop-down faa-float animated">
+      <span class="iconify" data-icon="fa:chevron-down">
+        <svg viewBox="0 0 448 512" width="1em" height="1em" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M207 381.5L12.7 187.1c-9.4-9.4-9.4-24.6 0-33.9l22.7-22.7c9.4-9.4 24.5-9.4 33.9 0L224 284.5l154.7-154c9.4-9.3 24.5-9.3 33.9 0l22.7 22.7c9.4 9.4 9.4 24.6 0 33.9L241 381.5c-9.4 9.4-24.6 9.4-34 0z"></path>
+        </svg>
+      </span>
+    </div>
+  </div>
+  <PostList items={items} page={page} pages={pages} olderHref={pages > 1 ? "/page/2" : undefined} />
+</Base>

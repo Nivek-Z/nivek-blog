@@ -1,0 +1,63 @@
+---
+import Base from "../layouts/Base.astro";
+import { photos } from "../lib/content";
+---
+<Base title="图库" template="photos" contentClass="photos">
+  <div slot="banner" class="page-header">
+    <div class="pattern-title"><h1>图库</h1></div>
+  </div>
+  <div class="photos-container">
+    <section class="photos-inner">
+      <div class="masonry-container">
+        <div class="masonry-tools">
+          <div class="photos-group">
+            <nav id="gallery-filter">
+              <ul>
+                <li><span data-filter="*" class="active">全部</span></li>
+                <li><span data-filter=".group-photo-group-l2qe9fun">二刺蝎</span></li>
+              </ul>
+            </nav>
+          </div>
+          <nav id="grid-changer" class="grid-changer">
+            <ul>
+              <li>
+                <span class="active" data-col="3">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+                    <rect width="10" height="10" x="10" y="10"></rect>
+                  </svg>
+                </span>
+              </li>
+              <li>
+                <span data-col="5">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+                    <rect width="7" height="7" x="7" y="7"></rect>
+                    <rect width="7" height="7" x="15" y="7"></rect>
+                    <rect width="7" height="7" x="7" y="15"></rect>
+                    <rect width="7" height="7" x="15" y="15"></rect>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="photos-content fancybox-content">
+          <div class="gallery masonry-gallery columns-3">
+            {photos.map((photo) => (
+              <figure class={photo.className}>
+                <header class="gallery-icon">
+                  <img src={photo.src} alt={photo.alt || photo.title} width="500" height="500" />
+                </header>
+                <figcaption class="gallery-caption">
+                  <div class="entry-summary">
+                    <h3>{photo.title}</h3>
+                    {photo.description && <p>{photo.description}</p>}
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,25 @@
+---
+import Base from "../layouts/Base.astro";
+import { links } from "../lib/content";
+---
+<Base title="友情链接" template="page" contentClass="">
+  <div slot="banner" class="page-header">
+    <div class="pattern-title"><h1>友情链接</h1></div>
+  </div>
+  <article class="link-article">
+    <div class="links">
+      <h3 class="link-title"><span class="fake-title">友情链接</span></h3>
+      <ul class="link-items">
+        {links.map((link) => (
+          <li class="link-item">
+            <a class="link-item-inner" href={link.href} title={link.name} target="_blank" rel="noopener noreferrer">
+              <img src={link.logo} alt={link.name} width="65" height="65" />
+              <span class="sitename">{link.name}</span>
+              <div class="linkdes">{link.description}</div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </article>
+</Base>
