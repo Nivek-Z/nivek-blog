@@ -1,0 +1,27 @@
+---
+import Base from "../../layouts/Base.astro";
+import PostList from "../../components/PostList.astro";
+import { assets, pageCount, posts, slicePage, SITE_SUBTITLE, SITE_TITLE } from "../../lib/content";
+export function getStaticPaths() {
+  const pages = pageCount();
+  return Array.from({ length: Math.max(0, pages - 1) }, (_, i) => ({
+    params: { page: String(i + 2) },
+  }));
+}
+const page = Number(Astro.params.page);
+const pages = pageCount();
+const items = slicePage(posts, page);
+const older = page < pages ? `/page/${page + 1}` : undefined;
+---
+<Base title={`${SITE_TITLE} - 第 ${page} 页`} template="index" contentClass="index" description={SITE_SUBTITLE}>
+  <div slot="banner" class="headertop">
+    <figure id="centerbg" class="centerbg">
+      <img class="cover-bg" src={assets.hero} alt="background picture of the home page" width="1920" height="1080" />
+      <div class="focusinfo"></div>
+    </figure>
+    <div class="headertop-down faa-float animated">
+      <span class="iconify" data-icon="fa:chevron-down"></span>
+    </div>
+  </div>
+  <PostList items={items} page={page} pages={pages} olderHref={older} />
+</Base>

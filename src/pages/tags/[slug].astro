@@ -1,0 +1,19 @@
+---
+import Base from "../../layouts/Base.astro";
+import PostList from "../../components/PostList.astro";
+import { tagGroups } from "../../lib/content";
+export function getStaticPaths() {
+  return tagGroups().map((tag) => ({
+    params: { slug: tag.slug },
+    props: { name: tag.name, posts: tag.posts },
+  }));
+}
+interface Props { name: string; posts: import("../../lib/content").Post[] }
+const { name, posts } = Astro.props;
+---
+<Base title={`标签：${name}`} template="page" contentClass="tag">
+  <div slot="banner" class="page-header">
+    <div class="pattern-title"><h1>标签：{name}</h1></div>
+  </div>
+  <PostList items={posts} page={1} pages={1} showDiscovery={false} />
+</Base>
