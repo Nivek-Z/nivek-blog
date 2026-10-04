@@ -1,0 +1,225 @@
+---
+import { assets, bgThemes, DEFAULT_AVATAR, SITE_SUBTITLE, SITE_TITLE } from "../lib/content";
+interface Props {
+  title: string;
+  description?: string;
+  template?: "index" | "post" | "photos" | "page";
+  contentClass?: string;
+}
+const { title, description = SITE_SUBTITLE, template = "page", contentClass = "" } = Astro.props;
+const yyaTop = template === "post" ? "-100px" : "0";
+const fullTitle = template === "index" ? `${SITE_TITLE} - ${SITE_SUBTITLE}` : title;
+const themeStyle = `<style>
+      :root {
+        --bg-light: #f4f4f4;
+        --bg-dark: #0d1117;
+        --theme-color: #FE9600;
+        --loading-image: url("/themes/theme-sakura/assets/images/load/rotating-ball-o.svg");
+        --cursor-link: url("/themes/theme-sakura/assets/cursor/ayuda.cur"), auto;
+        --cursor-link-active: url("/themes/theme-sakura/assets/cursor/work.cur"), alias;
+        --cursor-text: url("/themes/theme-sakura/assets/cursor/texto.cur"), auto;
+        --cursor-normal: url("/themes/theme-sakura/assets/cursor/normal.cur"), auto;
+        --cursor-hover: url("/themes/theme-sakura/assets/cursor/No_Disponible.cur"), auto;
+        --cd-top-image: url("${assets.scroll}") no-repeat center;
+        --cd-top-display: none;
+        --mobile-cd-top-display: flex;
+        --standard-post-list-border-radius: 50%;
+        --first-screen-filter-images: rgba(255, 255, 255, .3);
+        --yya-header-top: ${yyaTop};
+      }
+      .video-container {
+        --video-play-image: url("${assets.play}");
+        --video-pause-image: url("${assets.pause}");
+      }
+      .search-form {
+        --search-form-background: url("/themes/theme-sakura/assets/images/search/iloli.gif");
+      }
+      .article-protected-bg {
+        background: rgba(255, 255, 255, 0.6) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 12px;
+      }
+    </style>`;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <meta name="theme-color" content="#FE9600" />
+    <meta name="description" content={description} />
+    <meta name="generator" content="Astro" />
+    <link rel="icon" href={assets.favicon} />
+    <link rel="preload" href="/themes/theme-sakura/assets/dist/css/main-2.4.3.min.css" as="style" />
+    <link rel="stylesheet" href="/themes/theme-sakura/assets/dist/css/main-2.4.3.min.css" />
+    <link rel="stylesheet" href="/themes/theme-sakura/assets/dist/css/highlight-Dracula-2.4.3.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC&display=swap&subset=chinese-simplified,chinese-traditional" />
+    <link rel="stylesheet" href="/extra.css" />
+    <link rel="stylesheet" href="/themes/theme-sakura/assets/dist/css/font-awesome-animation.min-2.4.3.min.css" />
+    <title>{fullTitle}</title>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js" defer></script>
+    <script src="/site.js" defer></script>
+  </head>
+  <body class="serif">
+    <Fragment set:html={themeStyle} />
+
+    <section id="main-container" class:list={["container", { "is-homepage": template === "index" }]}>
+      <header class="site-header">
+        <div class="header-inner">
+          <div class="header-before">
+            <div class="site-nav-toggle">
+              <div class="nav-toggle"><div class="icon"></div></div>
+            </div>
+            <div class="site-branding">
+              <h1 class="site-title">
+                <a href="/">{SITE_TITLE}</a>
+              </h1>
+            </div>
+          </div>
+          <div class="header-content">
+            <div class="lower-container">
+              <div class="lower">
+                <nav class="navbar">
+                  <ul class="menu-root">
+                    <li class="menu-item"><a href="/"><span class="flex-child-center faa-parent animated-hover"><span>首页</span></span></a></li>
+                    <li class="menu-item"><a href="/links"><span class="flex-child-center faa-parent animated-hover"><span>友链</span></span></a></li>
+                    <li class="menu-item"><a href="/photos"><span class="flex-child-center faa-parent animated-hover"><span>图库</span></span></a></li>
+                    <li class="menu-item">
+                      <a href="https://watchdog.nivekz.org/status/sites" target="_blank" rel="noopener">
+                        <span class="flex-child-center faa-parent animated-hover"><span>服务监控</span></span>
+                      </a>
+                      <ul class="sub-menu">
+                        <li class="menu-item"><a href="https://watchdog.nivekz.org/status/sites" target="_blank" rel="noopener"><span class="flex-child-center faa-parent animated-hover"><span>服务监控</span></span></a></li>
+                        <li class="menu-item"><a href="https://monitor.nivekz.org" target="_blank" rel="noopener"><span class="flex-child-center faa-parent animated-hover"><span>网站访问情况</span></span></a></li>
+                      </ul>
+                    </li>
+                    <li class="menu-item"><a href="/1752754799645"><span class="flex-child-center faa-parent animated-hover"><span>留言板</span></span></a></li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div class="header-after">
+            <div class="searchbox">
+              <a href="/search" aria-label="search">
+                <span class="iconify iconsearch" data-icon="solar:magnifer-outline"></span>
+              </a>
+            </div>
+            <div class="header-user-avatar">
+              <span class="iconify iconify--xxlarge" data-icon="solar:user-circle-linear"></span>
+              <div class="header-user-menu">
+                <div class="herder-user-name no-logged">
+                  <a href="#">登录</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="page" class="main site wrapper">
+        <div class="column">
+          <header class="header">
+            <slot name="banner" />
+          </header>
+        </div>
+        <div id="content" class:list={["main-inner", "site-content", contentClass || template]}>
+          <slot />
+        </div>
+      </main>
+    </section>
+
+    <section class="site-sidebar">
+      <div class="sidebar-close"></div>
+      <div class="sidebar-inner">
+        <div class="mobile-sidebar">
+          <div class="avatar">
+            <img src={DEFAULT_AVATAR} alt="site logo" width="90" height="90" />
+          </div>
+          <p class="glitch-text">Hi,Friend</p>
+          <div class="search">
+            <form class="search-form" method="get" action="/search" role="search">
+              <input class="m-search-input" type="search" name="keyword" placeholder="搜索..." required />
+            </form>
+          </div>
+          <nav class="navbar">
+            <ul class="menu-root">
+              <li class="menu-item"><a href="/"><span class="flex-child-center faa-parent animated-hover"><span>首页</span></span></a></li>
+              <li class="menu-item"><a href="/links"><span class="flex-child-center faa-parent animated-hover"><span>友链</span></span></a></li>
+              <li class="menu-item"><a href="/photos"><span class="flex-child-center faa-parent animated-hover"><span>图库</span></span></a></li>
+              <li class="menu-item">
+                <a href="https://watchdog.nivekz.org/status/sites" target="_blank" rel="noopener"><span class="flex-child-center faa-parent animated-hover"><span>服务监控</span></span></a>
+                <ul class="sub-menu">
+                  <li class="menu-item"><a href="https://watchdog.nivekz.org/status/sites" target="_blank" rel="noopener"><span class="flex-child-center faa-parent animated-hover"><span>服务监控</span></span></a></li>
+                  <li class="menu-item"><a href="https://monitor.nivekz.org" target="_blank" rel="noopener"><span class="flex-child-center faa-parent animated-hover"><span>网站访问情况</span></span></a></li>
+                </ul>
+              </li>
+              <li class="menu-item"><a href="/1752754799645"><span class="flex-child-center faa-parent animated-hover"><span>留言板</span></span></a></li>
+            </ul>
+          </nav>
+          <div class="footer"><p>© 2026 {SITE_TITLE}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="site-info">
+        <div class="footer-logo">
+          <p style="background-image: url(/themes/theme-sakura/assets/images/footer/sakura.svg);"></p>
+        </div>
+        <div class="footer-copyright">
+          <p>
+            <span>
+              Powered{"\u00A0"}
+              <span class="iconify animated" data-icon="fa:vimeo"></span>
+              {"\u00A0"}by{"\u00A0"}
+              <a rel="me" target="_blank" href="http://www.halo.run" title="一款现代化的开源建站 / CMS 系统。">Halo</a>
+            </span>
+            {"\u00A0"}•{"\u00A0"}
+            <span>
+              Crafted with{"\u00A0"}
+              <span class="iconify" data-icon="fa-heart"></span>
+              {"\u00A0"}by{"\u00A0"}
+              <a rel="me" target="_blank" href="https://github.com/LIlGG/halo-theme-sakura">LIlGG</a>
+            </span>
+          </p>
+        </div>
+        <div class="footer-device">
+          <p class="footer-site-time">© 2026 {SITE_TITLE}</p>
+          <p class="footer-beian"></p>
+        </div>
+      </div>
+    </footer>
+
+    <a href="#page" class="cd-top" aria-label="scroll to the top of the page"></a>
+    <button class="m-cd-top" title="Go to top" type="button">
+      <span class="iconify" data-icon="fa:chevron-up"></span>
+    </button>
+
+    <div class="change-skin-gear theme-change-js no-select">
+      <div class="keys">
+        <span>&nbsp;<span class="iconify rotating" data-icon="fa:gear"></span></span>
+      </div>
+    </div>
+    <button class="mobile-change-skin theme-change-js" aria-label="change theme" type="button">
+      <span class="iconify rotating" data-icon="fa:gear" style="top: 0"></span>
+    </button>
+    <div class="skin-menu no-select">
+      <div class="row-container">
+        <ul class="menu-list">
+          {bgThemes.map((item) => (
+            <li class="menu-item" data-item={JSON.stringify(item)}>
+              <span class="iconify" data-icon={item.bg_icon}></span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

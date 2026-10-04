@@ -1,0 +1,176 @@
+---
+import Base from "../../layouts/Base.astro";
+import Toc from "../../components/Toc.astro";
+import { assets, coverOf, formatSiteDate, posts, SITE_TITLE, type Post } from "../../lib/content";
+import { decoratePostHtml, readerNotices } from "../../lib/postExtras";
+export function getStaticPaths() {
+  return posts.map((post, index) => ({
+    params: { slug: post.slug },
+    props: { post, index },
+  }));
+}
+interface Props { post: Post; index: number }
+const { post, index } = Astro.props;
+const entryHtml = readerNotices(post.html, post.lastModifyTime) + decoratePostHtml(post.html);
+const older = posts[index + 1];
+const newer = posts[index - 1];
+const shareUrl = `https://blog.nivekz.org${post.permalink}`;
+const sharePath = post.permalink;
+const shareTitle = `${post.title}|Nivek`;
+const sharePic = post.cover || "";
+const shareDesc = post.excerpt || "";
+const q = encodeURIComponent;
+const weiboHref = `http://service.weibo.com/share/share.php?url=${q(sharePath)}&appkey=&title=${q(shareTitle)}&pic=${q(sharePic)}`;
+const qqHref = `http://connect.qq.com/widget/shareqq/index.html?url=${q(sharePath)}&title=${q(shareTitle)}&source=${q(shareTitle)}&desc=${q(shareDesc)}&pics=${q(sharePic)}&summary=${q(shareDesc)}`;
+const doubanHref = `http://shuo.douban.com/!service/share?href=${q(sharePath)}&name=${q(shareTitle)}&text=${q(shareDesc)}&image=${q(sharePic)}&starid=0&aid=0&style=11`;
+const qzoneHref = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${q(sharePath)}&title=${q(shareTitle)}&desc=${q(shareDesc)}&summary=${q(shareDesc)}&site=${q(SITE_TITLE)}`;
+const linkedinHref = `http://www.linkedin.com/shareArticle?mini=true&ro=true&title=${q(shareTitle)}&url=${q(sharePath)}&summary=${q(shareDesc)}&source=${q(SITE_TITLE)}&armin=armin`;
+---
+<Base title={`${post.title}|${SITE_TITLE}`} template="post" contentClass="post" description={post.excerpt}>
+  <div slot="banner" class="post-header">
+    <div class:list={["page-header", { "is-decorate": Boolean(post.cover) }]}>
+      {post.cover && (
+        <div class="pattern-center single-center no-select">
+          <div class="pattern-attachment-img">
+            <img class="lazyload" src={post.cover} alt="large picture of the cover" width="1920" height="400" />
+          </div>
+        </div>
+      )}
+      <div class="pattern-title">
+        <h1>{post.title}</h1>
+        <div class="post-meta">
+          <div class="meta-container">
+            <div class="post-meta-item">
+              <span class="post-meta-item-avatar">
+                <a href="/"><img src={post.avatar || assets.avatar} alt="author avatar" width="36" height="36" /></a>
+              </span>
+              <span class="post-authore-item-name"><a href="/">Nivek</a></span>
+            </div>
+            <div class="post-meta-item"><time datetime={post.publishTime || undefined}>发布于 {formatSiteDate(post.publishTime)}</time></div>
+            {post.lastModifyTime && (
+              <div class="post-meta-item"><time datetime={post.lastModifyTime}>最后编辑于 {formatSiteDate(post.lastModifyTime)}</time></div>
+            )}
+            <div class="post-meta-item"><span>{post.visit} 次阅读</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="primary" class="content-area">
+    <article class="post-article" data-owner="Nivek" data-url={post.permalink} data-last-modify={post.lastModifyTime || undefined}>
+      <div class="entry-content fancybox-content" set:html={entryHtml} />
+      <footer class="post-footer">
+        <div>
+          <p class="flex-child-center">
+            Q.E.D.
+            <span class="iconify" data-icon="fa:meetup" style="color: #d34836"></span>
+          </p>
+        </div>
+        <div class="post-footer-meta">
+          <div class="post-license">
+            <a class="flex-child-center" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="nofollow">
+              <span class="iconify" data-icon="fa:creative-commons"></span>
+              <span>知识共享署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)</span>
+            </a>
+          </div>
+          {post.tags.length > 0 && (
+            <div class="post-tags flex-child-center">
+              <span class="iconify" data-icon="system-uicons:tags" style="scale: 1.3;"></span>
+              {post.tags.map((tag) => (
+                <a href={tag.permalink} rel="tag">{tag.name}</a>
+              ))}
+            </div>
+          )}
+          <div class="post-share">
+            <ul class="social-share share-hidden">
+              <li>
+                <a class="s-weibo" href={weiboHref} onclick="window.open(this.href, 'weibo-share', 'width=490,height=700');return false;" title="分享至微博" aria-label="Social Network - weibo">
+                  <img src="/themes/theme-sakura/assets/images/sns/weibo.png" alt="weibo" height="32" width="32" />
+                </a>
+              </li>
+              <li>
+                <a class="s-qq" href={qqHref} onclick="window.open(this.href, 'qq-share', 'width=730,height=500');return false;" title="分享至 QQ" aria-label="Social Network - qq">
+                  <img src="/themes/theme-sakura/assets/images/sns/qq.png" alt="qq" height="32" width="32" />
+                </a>
+              </li>
+              <li>
+                <a href="javascript:" class="s-wechat" aria-label="Social Network - wechat">
+                  <div class="wechat-qrcode">
+                    <h4>微信扫一扫：分享</h4>
+                    <canvas id="qrcode" class="qrcode" title={post.title} data-url={shareUrl}></canvas>
+                    <div class="help">
+                      <p>微信里点“发现”，扫一下</p>
+                      <p>二维码便可将本文分享至朋友圈。</p>
+                    </div>
+                  </div>
+                  <img src="/themes/theme-sakura/assets/images/sns/wechat.png" alt="wechat" height="32" width="32" />
+                </a>
+              </li>
+              <li>
+                <a class="s-douban" href={doubanHref} onclick="window.open(this.href, 'douban-share', 'width=490,height=600');return false;" title="分享至豆瓣" aria-label="Social Network - douban">
+                  <img src="/themes/theme-sakura/assets/images/sns/douban.png" alt="douban" height="32" width="32" />
+                </a>
+              </li>
+              <li>
+                <a class="s-qzone" href={qzoneHref} onclick="window.open(this.href, 'qzone-share', 'width=490,height=600');return false;" title="分享至 QQ 空间" aria-label="Social Network - qzone">
+                  <img src="/themes/theme-sakura/assets/images/sns/qzone.png" alt="qzone" height="32" width="32" />
+                </a>
+              </li>
+              <li>
+                <a class="s-linkedin" href={linkedinHref} onclick="window.open(this.href, 'linkedin-share', 'width=490,height=600');return false;" title="分享至领英" aria-label="Social Network - linkedin">
+                  <img src="/themes/theme-sakura/assets/images/sns/linkedin.png" alt="linkedin" height="32" width="32" />
+                </a>
+              </li>
+            </ul>
+            <span class="iconify show-share" data-icon="akar-icons:arrow-forward-thick"></span>
+          </div>
+        </div>
+      </footer>
+    </article>
+
+    <section class="post-pagination">
+      {older && (
+        <div class="pagination-container previous">
+          <a href={older.permalink} rel="prev">
+            <img src={coverOf(older)} alt="The cover picture of the previous content" height="160" width="390" />
+            <span class="label">Previous Post</span>
+            <div class="info"><h3>{older.title}</h3></div>
+          </a>
+        </div>
+      )}
+      {newer && (
+        <div class="pagination-container next">
+          <a href={newer.permalink} rel="next">
+            <img src={coverOf(newer)} alt="The cover picture of the next content" height="160" width="390" />
+            <span class="label">Next Post</span>
+            <div class="info"><h3>{newer.title}</h3></div>
+          </a>
+        </div>
+      )}
+    </section>
+
+    <section class="author-profile">
+      <div class="info">
+        <a href="/" class="profile gravatar">
+          <img src={post.avatar || assets.avatar} alt="Nivek" width="70" height="70" />
+        </a>
+        <div class="meta"><h3><a href="/">Nivek</a></h3></div>
+      </div>
+      <p class="flex-child-center">
+        <span class="iconify" data-icon="solar:pen-line-duotone"></span>
+        <span>我喜欢做的事就是不写个性签名</span>
+      </p>
+    </section>
+  </div>
+
+  {post.toc.length > 0 && (
+    <aside class="sidebar">
+      <div class="sidebar-inner">
+        <div class="toc-container">
+          <div class="toc"><Toc nodes={post.toc} /></div>
+        </div>
+      </div>
+    </aside>
+  )}
+</Base>
