@@ -145,7 +145,7 @@
     content.innerHTML = message;
     var hide = document.createElement("div");
     hide.className = "hide-minicode flex-child-center";
-    hide.innerHTML = '<span class="iconify iconify--small" data-icon="ic:sharp-close">\u00d7</span>';
+    hide.innerHTML = '<span class="iconify iconify--small" data-icon="ic:sharp-close">×</span>';
     hide.addEventListener("click", function () { toast.classList.add("hide"); }, { once: true });
     toast.appendChild(content);
     toast.appendChild(hide);
