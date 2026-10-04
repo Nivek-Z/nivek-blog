@@ -1,0 +1,31 @@
+---
+import PostCard from "./PostCard.astro";
+import type { Post } from "../lib/content";
+interface Props {
+  items: Post[];
+  page: number;
+  pages: number;
+  olderHref?: string;
+  showDiscovery?: boolean;
+}
+const { items, page, pages, olderHref, showDiscovery = true } = Astro.props;
+const offset = (page - 1) * 10;
+---
+<div id="primary" class="content-area">
+  <div id="main" class="site-main">
+    {showDiscovery && (
+      <h1 class="main-title flex-child-center" style="font-family: 'Ubuntu', sans-serif">
+        <span class="iconify" data-icon="fa:envira"></span>
+        <span>发现</span>
+      </h1>
+    )}
+    {items.map((post, i) => <PostCard post={post} index={offset + i} />)}
+  </div>
+  <div id="pagination" class="list-pagination">
+    {page < pages && olderHref ? (
+      <a href={olderHref}>下一页</a>
+    ) : (
+      <span>没有更多文章了</span>
+    )}
+  </div>
+</div>

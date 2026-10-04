@@ -1,0 +1,41 @@
+---
+import { coverOf, formatSiteDate, type Post } from "../lib/content";
+interface Props { post: Post; index: number }
+const { post, index } = Astro.props;
+const right = index % 2 === 1;
+---
+<article class:list={["post", "post-list-thumb", { "post-list-thumb-right": right }]} itemscope itemtype="http://schema.org/Article">
+  <div class="post-content-wrap">
+    <div class="post-date flex-child-center">
+      <span class="iconify" data-icon="solar:clock-circle-linear"></span>
+      <time class="publish-time" datetime={post.publishTime || undefined}>发布于 {formatSiteDate(post.publishTime)}</time>
+      {post.pinned && <span class="iconify hotpost" data-icon="solar:fire-outline"></span>}
+    </div>
+    <a href={post.permalink} class="post-title">
+      <h1>{post.title}</h1>
+    </a>
+    <div class="post-meta">
+      <span class="flex-child-center">
+        <span class="iconify" data-icon="solar:eye-linear"></span>
+        <span>{post.visit} 热度</span>
+      </span>
+      <span class="comments-number flex-child-center">
+        <span class="iconify" data-icon="solar:chat-line-line-duotone"></span>
+        <span>{post.comment} 条评论</span>
+      </span>
+    </div>
+    <div class="float-content">
+      <p>{post.excerpt}</p>
+      <div class="post-bottom">
+        <a href={post.permalink} class="button-normal flex-child-center">
+          <span class="iconify" data-icon="akar-icons:more-horizontal-fill"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="post-thumb">
+    <a href={post.permalink}>
+      <img class="lazyload" src={coverOf(post)} alt="thumbnail of the cover of the post" width="430" height="300" />
+    </a>
+  </div>
+</article>
